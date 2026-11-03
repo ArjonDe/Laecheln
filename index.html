@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lilien für Celina</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg1: #fff5f8;
+    --bg2: #fde4ec;
+    --text: #8a3b5c;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: radial-gradient(ellipse at 60% 35%, var(--bg1), var(--bg2));
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 100vh; overflow: hidden; padding: 8px 16px;
+  }
+  .stage { position: relative; width: min(100%, calc((100vh - 100px) * 1.5625)); }
+  svg { display: block; width: 100%; height: auto; }
+
+  /* Strauß */
+  .stem { stroke-dasharray: 1; stroke-dashoffset: 1; animation: grow 2s ease-out forwards; }
+  .leaf { opacity: 0; transform: scale(0); animation: leafIn 1s ease-out forwards; }
+  .bloom { transform: scale(0) rotate(-40deg); animation: bloom 1.2s cubic-bezier(.2,.9,.3,1.2) forwards; }
+  .sway { transform-origin: 660px 510px; animation: sway 6s ease-in-out infinite alternate; }
+  .ribbon { opacity: 0; animation: fade 1s ease forwards 2.4s; }
+
+  @keyframes grow { to { stroke-dashoffset: 0; } }
+  @keyframes leafIn { to { opacity: 1; transform: scale(1); } }
+  @keyframes bloom { to { transform: scale(1) rotate(0); } }
+  @keyframes fade { to { opacity: 1; } }
+  @keyframes sway { from { transform: rotate(-1deg); } to { transform: rotate(1deg); } }
+
+  /* Auto: fährt von links herein und hält neben dem Strauß */
+  .car { transform: translateX(-240px); animation: drive 4s cubic-bezier(.25,.7,.35,1) forwards 3.5s; }
+  .wheel { transform-box: fill-box; transform-origin: center;
+    animation: roll 4s cubic-bezier(.25,.7,.35,1) forwards 3.5s; }
+  .door { transform-box: fill-box; transform-origin: 0 50%; animation: door 2s ease-in-out forwards 7.6s; }
+  @keyframes drive { to { transform: translateX(60px); } }
+  @keyframes roll { to { transform: rotate(1440deg); } }
+  @keyframes door { 0%,100% { transform: scaleX(1); } 20%,80% { transform: scaleX(.2); } }
+
+  /* Mann: steigt aus und geht ein Stück nach rechts */
+  .man { opacity: 0; transform: translateX(130px); animation: manOut 1.4s ease-out forwards 8s; }
+  .leg { transform-box: fill-box; transform-origin: 50% 0; animation: step .35s ease-in-out 4 alternate 8s; }
+  .leg.back { animation-direction: alternate-reverse; }
+  .arm { transform-box: fill-box; transform-origin: 50% 100%; animation: wave 1.2s ease-in-out infinite 9.8s; }
+  @keyframes manOut {
+    0% { opacity: 0; transform: translateX(130px); }
+    10% { opacity: 1; }
+    100% { opacity: 1; transform: translateX(268px); }
+  }
+  @keyframes step { from { transform: rotate(-18deg); } to { transform: rotate(18deg); } }
+  @keyframes wave { 0%,100% { transform: rotate(0); } 50% { transform: rotate(-25deg); } }
+
+  /* Sprechblase */
+  .bubble {
+    position: absolute; left: 2%; bottom: 25%; width: 35%;
+    background: #fff; color: #8a3b5c; border: 3px solid #f06292; border-radius: 22px;
+    padding: .7em .9em; margin: 0; text-align: center; line-height: 1.25;
+    font-family: 'Patrick Hand', 'Comic Sans MS', Arial, sans-serif;
+    font-size: clamp(15px, 2.1vw, 26px);
+    opacity: 0; transform: scale(.4); transform-origin: 75% 100%;
+    animation: pop .6s cubic-bezier(.2,.9,.3,1.4) forwards 9.6s;
+  }
+  .bubble::after {
+    content: ''; position: absolute; left: 70%; bottom: -17px;
+    width: 26px; height: 26px; background: #fff;
+    border-right: 3px solid #f06292; border-bottom: 3px solid #f06292;
+    transform: rotate(45deg);
+  }
+  .bubble strong { display: block; font-size: 1.25em; font-weight: 400; margin-bottom: .2em; }
+  @keyframes pop { to { opacity: 1; transform: scale(1); } }
+
+  /* Hochformat (Handy): Sprechblase unter die Szene */
+  @media (max-aspect-ratio: 1/1) {
+    .bubble { position: static; width: 100%; margin-top: 10px; transform-origin: 50% 0; }
+    .bubble::after { display: none; }
+  }
+
+  h1 {
+    font-family: 'Great Vibes', cursive; font-weight: 400;
+    color: var(--text); font-size: clamp(2.2rem, 7vh, 3.6rem);
+    margin: 2px 0 0; opacity: 0; animation: fade 1.5s ease forwards 3s;
+    text-shadow: 0 2px 12px rgba(255,255,255,.8);
+  }
+
+  .petal-fall {
+    position: fixed; top: -30px; width: 14px; height: 22px; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 30%, #fff, #f7c6d6);
+    border-radius: 50% 50% 50% 50% / 70% 70% 30% 30%;
+    opacity: .85; animation: fall linear forwards;
+  }
+  @keyframes fall {
+    to { transform: translate(var(--dx), 110vh) rotate(var(--rot)); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+<svg viewBox="0 0 1000 640" role="img" aria-label="Ein riesiger Strauß Lilien, daneben hält ein kleines Auto und ein Mann steigt aus">
+  <defs>
+    <linearGradient id="petalWhite" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset=".6" stop-color="#fff4f7"/>
+      <stop offset="1" stop-color="#f6c3d3"/>
+    </linearGradient>
+    <linearGradient id="petalPink" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffe6ee"/>
+      <stop offset=".55" stop-color="#f48fb1"/>
+      <stop offset="1" stop-color="#c2185b"/>
+    </linearGradient>
+    <linearGradient id="petalRose" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff0f4"/>
+      <stop offset=".6" stop-color="#fbc8d8"/>
+      <stop offset="1" stop-color="#ec7fa4"/>
+    </linearGradient>
+    <linearGradient id="stemGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6aa84f"/>
+      <stop offset="1" stop-color="#2e6b30"/>
+    </linearGradient>
+    <linearGradient id="leafGrad" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#2e7d32"/>
+      <stop offset="1" stop-color="#81c784"/>
+    </linearGradient>
+    <linearGradient id="ribbonGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#d81b60"/>
+      <stop offset=".5" stop-color="#f06292"/>
+      <stop offset="1" stop-color="#d81b60"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Wiese und Straße -->
+  <path d="M0 585 Q250 565 500 580 T1000 575 V640 H0 Z" fill="#d6ebc0"/>
+  <rect x="0" y="600" width="1000" height="40" fill="#c9bcc4"/>
+  <line x1="0" y1="634" x2="1000" y2="634" stroke="#fff" stroke-width="2" stroke-dasharray="26 22"/>
+
+  <!-- Riesiger Strauß -->
+  <g class="sway">
+    <g id="stems"></g>
+    <g id="flowers"></g>
+  </g>
+  <g class="ribbon" transform="translate(660 505) scale(1.25) translate(-300 -533)">
+    <path d="M268 520 Q300 510 332 520 L328 548 Q300 540 272 548 Z" fill="url(#ribbonGrad)"/>
+    <path d="M300 532 C 270 500, 240 520, 262 540 C 275 552, 292 540, 300 532 Z" fill="#e91e63"/>
+    <path d="M300 532 C 330 500, 360 520, 338 540 C 325 552, 308 540, 300 532 Z" fill="#e91e63"/>
+    <path d="M296 536 L270 600 L284 594 L292 610 Z" fill="#c2185b"/>
+    <path d="M304 536 L330 600 L316 594 L308 610 Z" fill="#c2185b"/>
+    <circle cx="300" cy="533" r="7" fill="#ad1457"/>
+  </g>
+
+  <!-- Mann (hinter dem Auto, damit er beim Aussteigen dahinter hervorkommt) -->
+  <g transform="translate(0 630)">
+    <g class="man">
+      <g class="leg back"><rect x="-13" y="-46" width="11" height="40" rx="5" fill="#34495e"/><ellipse cx="-6" cy="-5" rx="10" ry="5" fill="#2b2b35"/></g>
+      <g class="leg"><rect x="2" y="-46" width="11" height="40" rx="5" fill="#3f5873"/><ellipse cx="9" cy="-5" rx="10" ry="5" fill="#2b2b35"/></g>
+      <rect x="-19" y="-92" width="38" height="50" rx="13" fill="#4f8fd6"/>
+      <rect x="-27" y="-88" width="10" height="36" rx="5" fill="#4f8fd6" transform="rotate(8 -22 -88)"/>
+      <g transform="translate(19 -84) rotate(35)">
+        <g class="arm">
+          <rect x="-5" y="-34" width="10" height="36" rx="5" fill="#4f8fd6"/>
+          <circle cx="0" cy="-37" r="6" fill="#f3c9a5"/>
+        </g>
+      </g>
+      <circle cx="0" cy="-110" r="20" fill="#f3c9a5"/>
+      <path d="M-20 -112 C -20 -136, 20 -136, 20 -112 C 12 -122, -10 -122, -20 -112 Z" fill="#3b2a20"/>
+      <circle cx="-7" cy="-109" r="2.4" fill="#2b2b35"/>
+      <circle cx="8" cy="-109" r="2.4" fill="#2b2b35"/>
+      <path d="M-8 -101 Q0 -93 9 -101" stroke="#a5553f" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      <ellipse cx="-12" cy="-102" rx="4" ry="2.4" fill="#f48fb1" opacity=".5"/>
+      <ellipse cx="13" cy="-102" rx="4" ry="2.4" fill="#f48fb1" opacity=".5"/>
+    </g>
+  </g>
+
+  <!-- Kleines Auto -->
+  <g transform="translate(0 630)">
+    <g class="car">
+      <path d="M0 -18 Q0 -42 18 -44 L40 -46 Q52 -76 78 -76 L108 -76 Q124 -76 132 -46 L146 -42 Q156 -38 156 -20 L156 -12 L0 -12 Z" fill="#e8476f"/>
+      <path d="M48 -48 Q57 -70 78 -70 L90 -70 L90 -48 Z" fill="#cdeaf7"/>
+      <path d="M96 -70 L108 -70 Q119 -70 125 -48 L96 -48 Z" fill="#cdeaf7"/>
+      <g class="door">
+        <rect x="46" y="-46" width="48" height="30" rx="4" fill="#d63a61" stroke="#b92c50" stroke-width="1.5"/>
+        <rect x="80" y="-38" width="10" height="3" rx="1.5" fill="#fff"/>
+      </g>
+      <circle cx="150" cy="-30" r="4" fill="#ffe89a"/>
+      <rect x="0" y="-26" width="6" height="6" rx="2" fill="#ffb3c6"/>
+      <g class="wheel">
+        <circle cx="32" cy="-12" r="13" fill="#2b2b35"/><circle cx="32" cy="-12" r="6" fill="#d9d9e0"/>
+        <rect x="31" y="-22" width="2" height="20" fill="#9a9aa8"/>
+      </g>
+      <g class="wheel">
+        <circle cx="124" cy="-12" r="13" fill="#2b2b35"/><circle cx="124" cy="-12" r="6" fill="#d9d9e0"/>
+        <rect x="123" y="-22" width="2" height="20" fill="#9a9aa8"/>
+      </g>
+    </g>
+  </g>
+</svg>
+
+<p class="bubble"><strong>Celina du bist mega süß.</strong>Verlier dein Lächeln nicht damit machst du mich glücklicher und deine Arbeitskollegen&nbsp;&lt;3</p>
+</div>
+
+<h1>Für dich, Celina</h1>
+
+<script>
+  const NS = 'http://www.w3.org/2000/svg';
+  const el = (tag, attrs, parent) => {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  };
+
+  const defs = document.querySelector('defs');
+  const stems = document.getElementById('stems');
+  const flowers = document.getElementById('flowers');
+  const base = { x: 660, y: 510 };
+
+  // Blüten nur einmal zeichnen und per <use> wiederverwenden, damit der große Strauß flüssig bleibt
+  function defineLily(id, c, spot) {
+    const b = el('g', { id }, defs);
+    [[30, 1], [150, 1], [270, 1], [90, 0.85], [210, 0.85], [330, 0.85]].forEach(([a, w]) => {
+      const p = el('g', { transform: `rotate(${a})` }, b);
+      el('path', {
+        d: `M0 0 C ${16*w} -14, ${26*w} -46, 4 -78 Q 0 -84 -4 -78 C ${-26*w} -46, ${-16*w} -14, 0 0 Z`,
+        fill: `url(#${c})`, stroke: '#e79ab4', 'stroke-width': 0.9
+      }, p);
+      el('path', { d: 'M0 -6 Q 2 -40 0 -70', stroke: 'rgba(200,80,120,.35)', 'stroke-width': 1.2, fill: 'none' }, p);
+      for (let i = 0; i < 4; i++) {
+        el('circle', {
+          cx: (Math.random() - .5) * 10 * w, cy: -14 - Math.random() * 26,
+          r: 0.9 + Math.random() * 0.9, fill: spot, opacity: .7
+        }, p);
+      }
+    });
+    for (let i = 0; i < 6; i++) {
+      const a = (i * 60 + 15) * Math.PI / 180;
+      const len = 34 + (i % 2) * 6;
+      const sx = Math.sin(a) * len, sy = -Math.cos(a) * len;
+      el('path', { d: `M0 0 Q ${sx * .4} ${sy * .7} ${sx} ${sy}`, stroke: '#c5e1a5', 'stroke-width': 1.4, fill: 'none' }, b);
+      el('ellipse', { cx: sx, cy: sy, rx: 2.4, ry: 5, fill: '#d2691e', transform: `rotate(${i * 60 + 15} ${sx} ${sy})` }, b);
+    }
+    el('circle', { cx: 0, cy: 0, r: 6, fill: '#c5e1a5' }, b);
+  }
+  defineLily('lilyWhite', 'petalWhite', '#e57399');
+  defineLily('lilyPink', 'petalPink', '#880e4f');
+  defineLily('lilyRose', 'petalRose', '#c2185b');
+
+  function stem(x, y, delay, withLeaf) {
+    const cx = (x + base.x) / 2 + (x - base.x) * 0.15;
+    const cy = (y + base.y) / 2 + 40;
+    el('path', {
+      d: `M${base.x} ${base.y} Q${cx} ${cy} ${x} ${y}`, pathLength: 1,
+      class: 'stem', fill: 'none', stroke: 'url(#stemGrad)',
+      'stroke-width': 4.5, 'stroke-linecap': 'round',
+      style: `animation-delay:${delay}s`
+    }, stems);
+    if (!withLeaf) return;
+    const t = 0.32;
+    const lx = (1-t)*(1-t)*base.x + 2*(1-t)*t*cx + t*t*x;
+    const ly = (1-t)*(1-t)*base.y + 2*(1-t)*t*cy + t*t*y;
+    const side = x < base.x ? -1 : 1;
+    const ang = Math.atan2(y - base.y, x - base.x) * 180 / Math.PI + 90 + side * 40;
+    const g = el('g', { transform: `translate(${lx} ${ly}) rotate(${ang})` }, stems);
+    el('path', {
+      d: 'M0 0 C 14 -18, 12 -48, 0 -66 C -12 -48, -14 -18, 0 0 Z',
+      class: 'leaf', fill: 'url(#leafGrad)',
+      style: `animation-delay:${delay + 1}s`
+    }, g);
+  }
+
+  // Stielenden unter der Schleife
+  [-34, -20, -7, 7, 20, 34].forEach((dx, i) => {
+    el('path', {
+      d: `M${base.x} ${base.y} L${base.x + dx} 592`, pathLength: 1,
+      class: 'stem', stroke: 'url(#stemGrad)', 'stroke-width': 5, 'stroke-linecap': 'round', fill: 'none',
+      style: `animation-delay:${i * 0.05}s`
+    }, stems);
+  });
+
+  // 34 Lilien gleichmäßig in einer Kuppel verteilen (Sonnenblumen-Muster), die unteren liegen vorne
+  const N = 34, RX = 225, RY = 185, CX = 660, CY = 250;
+  const colors = ['lilyWhite', 'lilyPink', 'lilyWhite', 'lilyRose'];
+  const lilies = [];
+  for (let i = 0; i < N; i++) {
+    const r = Math.sqrt((i + 0.5) / N), th = i * 2.39996;
+    lilies.push({
+      x: CX + r * RX * Math.cos(th), y: CY + r * RY * Math.sin(th),
+      s: 0.92 - r * 0.18, c: colors[i % colors.length], rot: Math.random() * 60 - 30
+    });
+  }
+  lilies.sort((a, b) => a.y - b.y);
+  lilies.forEach((p, i) => {
+    const delay = 0.8 + i * 0.07;
+    stem(p.x, p.y, i * 0.03, i % 3 === 0);
+    const pos = el('g', { transform: `translate(${p.x} ${p.y}) rotate(${p.rot}) scale(${p.s})` }, flowers);
+    const b = el('g', { class: 'bloom', style: `animation-delay:${delay}s` }, pos);
+    el('use', { href: '#' + p.c }, b);
+  });
+
+  // Fallende Blütenblätter
+  function dropPetal() {
+    const d = document.createElement('div');
+    d.className = 'petal-fall';
+    d.style.left = Math.random() * 100 + 'vw';
+    d.style.setProperty('--dx', (Math.random() * 200 - 100) + 'px');
+    d.style.setProperty('--rot', (Math.random() * 720 - 360) + 'deg');
+    d.style.animationDuration = (6 + Math.random() * 5) + 's';
+    document.body.appendChild(d);
+    setTimeout(() => d.remove(), 12000);
+  }
+  setTimeout(() => setInterval(dropPetal, 800), 3500);
+</script>
+</body>
+</html>
